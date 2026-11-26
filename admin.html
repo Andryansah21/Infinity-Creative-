@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#07090d">
+<title>Dashboard Admin — Infinity Creative</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+:root{--bg:#07090d;--panel:#10141b;--panel2:#151b24;--text:#f2f3f5;--muted:#8b96a6;--line:#ffffff1f;--accent:#b8ff4d;--blue:#6ea8ff;--bad:#ff7a7a;--sans:Manrope,"Segoe UI",system-ui,sans-serif;--mono:"DM Mono",ui-monospace,monospace}
+*,::before,::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 var(--sans)}
+h1,h2,h3,p{margin:0}button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;border-radius:100px;border:1px solid var(--line);background:transparent;cursor:pointer;font-weight:700;font-size:13px;text-decoration:none;color:var(--text);white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#111}
+.btn.pri:disabled{opacity:.4;cursor:default}
+.btn.sm{min-height:32px;padding:0 12px;font-size:12px}
+.btn.del{color:var(--bad)}
+.gate{min-height:100vh;display:grid;place-items:center;padding:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+.gate .card{width:min(420px,100%);display:grid;gap:14px}
+.gate h1{font-size:26px;letter-spacing:-.04em}
+label{display:grid;gap:6px;font-size:12px;color:var(--muted)}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:14px;color:var(--text)}
+textarea{min-height:84px;resize:vertical}
+input[type=color]{padding:3px;height:42px;cursor:pointer}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+.top{position:sticky;top:0;z-index:20;background:#07090dee;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:10px;padding:12px 16px;max-width:1100px;margin:auto;flex-wrap:wrap}
+.top b{font:700 12px var(--mono);letter-spacing:.14em;margin-right:auto}
+.tabs{display:flex;gap:6px;padding:0 16px 12px;max-width:1100px;margin:auto;overflow-x:auto}
+.tab{flex:none;border:1px solid var(--line);background:transparent;border-radius:100px;padding:8px 15px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted)}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#111}
+.tab i{font-style:normal;background:var(--bad);color:#111;border-radius:100px;padding:0 6px;margin-left:6px;font-size:11px}
+main{max-width:1100px;margin:auto;padding:22px 16px 80px;display:grid;gap:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.stat strong{display:block;font-size:30px;letter-spacing:-.06em;line-height:1.1}
+.stat span{font-size:12px;color:var(--muted)}
+.two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.fields{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.fields .full{grid-column:1/-1}
+.chart{display:flex;align-items:flex-end;gap:5px;height:130px;margin-top:14px}
+.chart div{flex:1;display:grid;align-content:end;gap:4px;height:100%;text-align:center;font:10px var(--mono);color:var(--muted)}
+.chart i{display:block;background:linear-gradient(var(--accent),var(--blue));border-radius:5px 5px 2px 2px;min-height:2px}
+.row{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row b{font-weight:600;word-break:break-word}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.item>summary{list-style:none;display:flex;gap:12px;align-items:center;padding:12px;cursor:pointer}
+.item>summary::-webkit-details-marker{display:none}
+.item .thumb{width:46px;height:56px;border-radius:9px;object-fit:cover;background:var(--panel2);flex:none}
+.item .body{padding:0 14px 16px;display:grid;gap:12px}
+.item .t{flex:1;min-width:0}.item .t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);border-radius:100px;padding:3px 9px;color:var(--muted)}
+.pill.baru{color:#111;background:var(--accent);border-color:var(--accent)}
+.pill.selesai{color:var(--blue);border-color:var(--blue)}
+.msgtext{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+.prev{height:70px;width:auto;max-width:100%;border-radius:10px;background:var(--panel2);border:1px solid var(--line);object-fit:contain}
+.group{display:grid;gap:12px}
+.group>summary{cursor:pointer;font-weight:700;padding:4px 0}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--accent);border-radius:100px;padding:10px 18px;font-size:13px;z-index:50;max-width:92vw}
+#toast.bad{border-color:var(--bad)}
+.hint{font-size:12px;color:var(--muted)}
+.err{color:var(--bad);font-size:13px}
+</style>
+</head>
+<body>
+<div class="gate" id="gate">
+ <form class="card" id="login">
+  <p class="eyebrow">Admin</p>
+  <h1>Dashboard Infinity Creative</h1>
+  <p class="muted" id="gateMsg">Masuk untuk mengelola konten, pesan, dan statistik website.</p>
+  <label>Email<input id="lEmail" type="email" autocomplete="username" required></label>
+  <label>Kata sandi<input id="lPass" type="password" autocomplete="current-password" required></label>
+  <p class="err" id="lErr" role="alert"></p>
+  <button class="btn pri" type="submit">Masuk</button>
+  <button class="hint" id="forgotBtn" type="button" style="border:0;background:none;padding:4px 0;text-align:left;cursor:pointer">Lupa kata sandi?</button>
+  <a class="hint" href="index.html">← Kembali ke website</a>
+ </form>
+ <form class="card" id="forgot" hidden>
+  <p class="eyebrow">Pemulihan akun</p>
+  <h1>Kirim tautan reset</h1>
+  <p class="muted">Kami akan mengirim tautan untuk membuat kata sandi baru ke email akun Admin.</p>
+  <label>Email<input id="fEmail" type="email" autocomplete="email" required></label>
+  <p class="err" id="fErr" role="alert"></p>
+  <p class="hint" id="fInfo" role="status"></p>
+  <button class="btn pri" id="fSubmit" type="submit">Kirim tautan reset</button>
+  <button class="hint" id="backLogin" type="button" style="border:0;background:none;padding:4px 0;text-align:left;cursor:pointer">← Kembali ke login</button>
+ </form>
+ <form class="card" id="reset" hidden>
+  <p class="eyebrow">Keamanan akun</p>
+  <h1>Buat kata sandi baru</h1>
+  <p class="muted">Tautan pemulihan berhasil dikenali. Masukkan kata sandi baru untuk akun Admin.</p>
+  <label>Kata sandi baru<input id="rPass" type="password" minlength="8" autocomplete="new-password" required></label>
+  <label>Ulangi kata sandi<input id="rPass2" type="password" minlength="8" autocomplete="new-password" required></label>
+  <p class="err" id="rErr" role="alert"></p>
+  <button class="btn pri" id="rSubmit" type="submit">Simpan kata sandi baru</button>
+ </form>
+</div>
+
+<div id="app" hidden>
+ <header class="top">
+  <div class="top-in">
+   <b>INFINITY · ADMIN</b>
+   <a class="btn sm" href="index.html" target="_blank" rel="noopener">Lihat website ↗</a>
+   <button class="btn pri sm" id="saveBtn" type="button" disabled>Simpan perubahan</button>
+   <button class="btn sm" id="outBtn" type="button">Keluar</button>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+ </header>
+ <main id="view"></main>
+</div>
+<div id="toast" hidden></div>
+
+<script>
+/* =====================================================================
+   DASHBOARD ADMIN — semua data lewat Supabase REST (tanpa library)
+   ===================================================================== */
+const B = window.BACKEND || {};
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtDate = x => new Date(x).toLocaleString("id-ID", {dateStyle: "medium", timeStyle: "short"});
+const DARK = {bg:"#07090d", panel:"#10141b", panel2:"#151b24", text:"#f2f3f5", muted:"#8b96a6", accent:"#b8ff4d", blue:"#6ea8ff"};
+const LIGHT = {bg:"#f4f5f1", panel:"#ffffff", panel2:"#e9ece5", text:"#111318", muted:"#59616d", accent:"#75b927", blue:"#2468d6"};
+const COLOR_LABEL = {bg:"Latar halaman", panel:"Latar kartu", panel2:"Latar kartu 2", text:"Teks utama", muted:"Teks redup", accent:"Warna aksen", blue:"Warna gradien ke-2"};
+const GROUPS = {hero:"Beranda", about:"Tentang", skills:"Keahlian", flow:"Alur kerja", projects:"Proyek", services:"Layanan", exp:"Pengalaman", contact:"Kontak", brand:"Merek (nama & teks berjalan)", footer:"Footer"};
+const TABS = [["home","Ringkasan"],["msg","Pesan"],["text","Konten"],["look","Tampilan"],["proj","Karya"],["svc","Layanan"],["set","Pengaturan"]];
+
+let S = null, cfg = {}, D = null, tab = "home", dirty = false, projTouched = false, hadProjects = false, newMsgs = 0;
+try { S = JSON.parse(localStorage.getItem("infinity-admin")); } catch (e) {}
+
+/* ---------- jaringan ---------- */
+function setSession(j) { S = {access_token: j.access_token, refresh_token: j.refresh_token}; localStorage.setItem("infinity-admin", JSON.stringify(S)); }
+function logout() { S = null; localStorage.removeItem("infinity-admin"); location.reload(); }
+async function refresh() {
+  if (!S) return false;
+  const r = await fetch(B.url + "/auth/v1/token?grant_type=refresh_token", {method: "POST", headers: {apikey: B.key, "Content-Type": "application/json"}, body: JSON.stringify({refresh_token: S.refresh_token})});
+  if (!r.ok) return false; setSession(await r.json()); return true;
+}
+async function api(path, o = {}, retry = true) {
+  const h = {apikey: B.key, Authorization: "Bearer " + (S ? S.access_token : B.key), ...(o.json !== undefined ? {"Content-Type": "application/json"} : {}), ...(o.headers || {})};
+  const r = await fetch(B.url + path, {method: o.method || "GET", headers: h, body: o.json !== undefined ? JSON.stringify(o.json) : o.body});
+  if (r.status === 401 && retry && S && await refresh()) return api(path, o, false);
+  const txt = await r.text();
+  if (!r.ok) { let m = txt; try { const j = JSON.parse(txt); m = j.message || j.msg || j.error_description || txt; } catch (e) {} throw new Error(m); }
+  return txt ? JSON.parse(txt) : null;
+}
+function toast(m, bad) { const t = $("#toast"); t.textContent = m; t.className = bad ? "bad" : ""; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 3500); }
+
+/* ---------- helper data ---------- */
+const getPath = (o, p) => p.split(".").reduce((a, k) => a == null ? a : a[k], o);
+function setPath(o, p, v) { const ks = p.split("."); let a = o; ks.slice(0, -1).forEach(k => a = a[k] = a[k] || {}); a[ks.pop()] = v; }
+function markDirty() { dirty = true; $("#saveBtn").disabled = false; }
+const imgSrc = v => (D.img[v] || v || "");
+const toRaw = el => { const c = el.cloneNode(true); c.querySelectorAll(".gradient").forEach(g => g.replaceWith("{" + g.textContent + "}")); return c.textContent.trim(); };
+
+async function loadDefaults() {
+  const html = await (await fetch("index.html", {cache: "no-store"})).text();
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const fields = [], seen = {};
+  doc.querySelectorAll("[data-k],[data-kl]").forEach(el => {
+    const list = el.hasAttribute("data-kl"), key = list ? el.dataset.kl : el.dataset.k;
+    if (seen[key]) return; seen[key] = 1;
+    const def = list ? [...el.children].filter(x => x.tagName === "SPAN").map(s => s.textContent.trim()).join(", ") : toRaw(el);
+    fields.push({key, list, label: el.dataset.label || key, def, group: key.split(".")[0]});
+  });
+  const m = html.match(/const PROJECTS = \[([\s\S]*?)\n\];/);
+  const projects = m ? new Function("return [" + m[1] + "]")() : [];
+  const img = {}; for (const x of html.matchAll(/(\w+): `(data:image\/[a-z]+;base64,[^`]+)`/g)) img[x[1]] = x[2].replace(/\s+/g, "");
+  D = {fields, projects, img, title: doc.title, desc: (doc.querySelector('meta[name="description"]') || {}).content || ""};
+}
+
+/* ---------- unggah gambar (dikompres ke WebP agar hemat kuota gratis) ---------- */
+async function compress(file, max = 1400) {
+  if (!/^image\/(png|jpe?g|webp)$/.test(file.type)) return {blob: file, ext: (file.name.split(".").pop() || "bin").toLowerCase().replace(/[^a-z0-9]/g, "")};
+  const bmp = await createImageBitmap(file), sc = Math.min(1, max / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * sc); c.height = Math.round(bmp.height * sc);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  const blob = await new Promise(r => c.toBlob(r, "image/webp", .86));
+  return {blob, ext: "webp"};
+}
+async function upload(file, folder) {
+  const {blob, ext} = await compress(file), path = folder + "/" + Date.now() + "." + ext;
+  await api("/storage/v1/object/media/" + path, {method: "POST", body: blob, headers: {"Content-Type": blob.type || "application/octet-stream", "x-upsert": "true"}});
+  return B.url + "/storage/v1/object/public/media/" + path;
+}
+
+/* ---------- tampilan tiap tab ---------- */
+const views = {
+  async home() {
+    const since = new Date(Date.now() - 30 * 864e5).toISOString();
+    const ev = await api("/rest/v1/events?select=type,label,ref,device,sid,created_at&created_at=gte." + since + "&order=created_at.desc&limit=5000");
+    const day = d => { const x = new Date(d); return x.getFullYear() + "-" + (x.getMonth() + 1) + "-" + x.getDate(); };
+    const visits = ev.filter(e => e.type === "visit"), today = day(Date.now());
+    const within = n => visits.filter(e => Date.now() - new Date(e.created_at) < n * 864e5).length;
+    const count = (arr, f) => { const m = {}; arr.forEach(e => { const k = f(e); m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 5); };
+    const days = [...Array(14)].map((_, i) => { const d = new Date(Date.now() - (13 - i) * 864e5); return {k: day(d), n: d.getDate(), c: 0}; });
+    visits.forEach(e => { const f = days.find(x => x.k === day(e.created_at)); if (f) f.c++; });
+    const max = Math.max(1, ...days.map(d => d.c));
+    const list = (rows, empty) => rows.length ? rows.map(r => `<div class="row"><b>${esc(r[0])}</b><span class="pill">${r[1]}</span></div>`).join("") : `<p class="muted">${empty}</p>`;
+    const mob = visits.filter(e => e.device === "mobile").length;
+    return `<div class="grid">
+      <div class="stat"><strong>${visits.filter(e => day(e.created_at) === today).length}</strong><span>Kunjungan hari ini</span></div>
+      <div class="stat"><strong>${within(7)}</strong><span>Kunjungan 7 hari</span></div>
+      <div class="stat"><strong>${within(30)}</strong><span>Kunjungan 30 hari</span></div>
+      <div class="stat"><strong>${new Set(visits.map(e => e.sid)).size}</strong><span>Pengunjung unik (30 hari)</span></div>
+      <div class="stat"><strong>${newMsgs}</strong><span>Pesan baru</span></div>
+      <div class="stat"><strong>${ev.filter(e => e.type === "wa_click" || e.type === "order").length}</strong><span>Klik WhatsApp / pesanan</span></div></div>
+    <div class="card"><p class="eyebrow">Kunjungan 14 hari terakhir</p>
+      <div class="chart">${days.map(d => `<div title="${d.c} kunjungan"><span>${d.c || ""}</span><i style="height:${Math.round(d.c / max * 90)}%"></i><span>${d.n}</span></div>`).join("")}</div></div>
+    <div class="two">
+      <div class="card"><p class="eyebrow">Karya paling sering dibuka</p>${list(count(ev.filter(e => e.type === "project_open"), e => e.label), "Belum ada data.")}</div>
+      <div class="card"><p class="eyebrow">Layanan paling diminati</p>${list(count(ev.filter(e => e.type === "order"), e => e.label), "Belum ada pesanan dari tombol layanan.")}</div>
+      <div class="card"><p class="eyebrow">Asal pengunjung</p>${list(count(visits, e => e.ref || "Langsung / tidak diketahui"), "Belum ada data.")}</div>
+      <div class="card"><p class="eyebrow">Perangkat & aksi</p>
+        <div class="row"><b>HP</b><span class="pill">${mob}</span></div><div class="row"><b>Desktop</b><span class="pill">${visits.length - mob}</span></div>
+        <div class="row"><b>Form terkirim</b><span class="pill">${ev.filter(e => e.type === "form_sent").length}</span></div>
+        <div class="row"><b>Unduh CV</b><span class="pill">${ev.filter(e => e.type === "cv_download").length}</span></div></div></div>
+    <p class="hint">Kunjungan Anda sendiri tidak dihitung selama Anda login di perangkat ini. Data tersimpan 30 hari terakhir pada tampilan ini.</p>`;
+  },
+  async msg() {
+    const rows = await api("/rest/v1/messages?select=*&order=created_at.desc&limit=100");
+    newMsgs = rows.filter(r => r.status === "baru").length; renderTabs();
+    if (!rows.length) return `<div class="card"><p class="muted">Belum ada pesan masuk. Pesan dari form kontak di website akan muncul di sini.</p></div>`;
+    return rows.map(m => {
+      const wa = m.phone ? "https://wa.me/" + (m.phone.replace(/\D/g, "").replace(/^0/, "62")) + "?text=" + encodeURIComponent("Halo " + m.name + ", terima kasih sudah menghubungi kami terkait " + (m.service || "desain") + ".") : "";
+      return `<details class="item" data-mid="${m.id}"><summary><div class="t"><b>${esc(m.name)}</b><span class="muted">${esc(m.service || "")} · ${fmtDate(m.created_at)}</span></div><span class="pill ${m.status}">${m.status}</span></summary>
+        <div class="body"><p class="muted">${esc(m.email || "")} ${m.phone ? "· " + esc(m.phone) : ""} · via ${esc(m.channel)}</p><div class="msgtext">${esc(m.message)}</div>
+        <div class="tools">${wa ? `<a class="btn sm pri" href="${wa}" target="_blank" rel="noopener">Balas via WhatsApp</a>` : ""}
+        ${m.email ? `<a class="btn sm" href="mailto:${esc(m.email)}?subject=${encodeURIComponent("Re: " + (m.service || "Permintaan desain"))}">Balas via Email</a>` : ""}
+        <button class="btn sm" data-act="mstat" data-id="${m.id}" data-v="dibaca">Tandai dibaca</button>
+        <button class="btn sm" data-act="mstat" data-id="${m.id}" data-v="selesai">Selesai</button>
+        <button class="btn sm del" data-act="mdel" data-id="${m.id}">Hapus</button></div></div></details>`;
+    }).join("");
+  },
+  text() {
+    const t = cfg.text || {}, l = cfg.lists || {};
+    const order = [...new Set(D.fields.map(f => f.group))];
+    return `<p class="hint">Kosongkan kolom untuk mengembalikan ke teks bawaan. Pada judul, kata dalam tanda { } akan berwarna gradien, contoh: Pesan yang {tersampaikan.}</p>` + order.map(g => `
+      <details class="card group" ${g === "hero" ? "open" : ""}><summary>${esc(GROUPS[g] || g)}</summary><div class="fields">${D.fields.filter(f => f.group === g).map(f => {
+        const cur = f.list ? l[f.key] : t[f.key], v = (cur !== undefined && cur !== "") ? cur : f.def, long = !f.list && (v.length > 70);
+        const at = f.list ? `data-tl="${esc(f.key)}"` : `data-t="${esc(f.key)}"`;
+        return `<label class="${long ? "full" : ""}">${esc(f.label)}${long ? `<textarea ${at} data-def="${esc(f.def)}">${esc(v)}</textarea>` : `<input ${at} data-def="${esc(f.def)}" value="${esc(v)}">`}</label>`;
+      }).join("")}</div></details>`).join("");
+  },
+  look() {
+    const th = cfg.theme || {}, f = cfg.fonts || {}, im = cfg.images || {};
+    const col = (mode, base) => `<div class="card group"><p class="eyebrow">Warna mode ${mode === "dark" ? "gelap (utama)" : "terang"}</p><div class="fields">${Object.keys(base).map(k => `<label>${COLOR_LABEL[k]}<input type="color" data-c="theme.${mode}.${k}" value="${(th[mode] || {})[k] || base[k]}"></label>`).join("")}</div></div>`;
+    const img = (k, label) => `<div class="card group"><p class="eyebrow">${label}</p><img class="prev" src="${imgSrc(im[k] || k)}" alt=""><div class="tools"><label class="btn sm" style="cursor:pointer">Ganti gambar<input type="file" accept="image/*" data-up="img:${k}" hidden></label>${im[k] ? `<button class="btn sm" data-act="imgreset" data-k="${k}">Kembalikan bawaan</button>` : ""}</div></div>`;
+    const opt = a => a.map(x => `<option value="${x}">`).join("");
+    return col("dark", DARK) + col("light", LIGHT) + `<div class="card group"><p class="eyebrow">Font (nama dari fonts.google.com)</p><div class="fields">
+      <label>Font utama<input list="fs" data-c="fonts.sans" placeholder="Manrope" value="${esc(f.sans || "")}"></label>
+      <label>Font label kecil (monospace)<input list="fm" data-c="fonts.mono" placeholder="DM Mono" value="${esc(f.mono || "")}"></label>
+      <label>Ketebalan judul<select data-c="fonts.weight">${["400","500","600","700","800"].map(w => `<option ${((f.weight || "400") === w) ? "selected" : ""}>${w}</option>`).join("")}</select></label></div>
+      <datalist id="fs">${opt(["Manrope","Inter","Poppins","Plus Jakarta Sans","Outfit","Sora","Space Grotesk","DM Sans","Montserrat","Syne","Playfair Display"])}</datalist>
+      <datalist id="fm">${opt(["DM Mono","JetBrains Mono","Space Mono","IBM Plex Mono","Fira Code"])}</datalist>
+      <p class="hint">Kosongkan untuk memakai font bawaan. Pastikan penulisan nama persis seperti di Google Fonts.</p></div>
+      ${img("logo", "Logo")}${img("avatar", "Foto profil (avatar kecil di pojok kanan atas)")}
+      <div class="tools"><button class="btn sm del" data-act="resettheme">Kembalikan warna & font bawaan</button></div>`;
+  },
+  proj() {
+    ensureProjects();
+    const cats = [["event","Event & Komunitas"],["religious","Religi"],["campaign","Campaign & Editorial"]];
+    return `<div class="tools"><button class="btn pri sm" data-act="padd">+ Tambah karya</button></div>` + cfg.projects.map((p, i) => `
+      <details class="item"><summary><img class="thumb" src="${esc(imgSrc(p.image))}" alt=""><div class="t"><b>${esc(p.title || "(tanpa judul)")}</b><span class="muted">${esc(p.label || "")} · ${esc(p.year || "")}</span></div></summary>
+      <div class="body"><div class="fields">
+       <label class="full">Judul<input data-p="${i}.title" value="${esc(p.title)}"></label>
+       <label>Kategori filter<select data-p="${i}.category">${cats.map(c => `<option value="${c[0]}" ${p.category === c[0] ? "selected" : ""}>${c[1]}</option>`).join("")}</select></label>
+       <label>Label (mis. Religi · Poster Event)<input data-p="${i}.label" value="${esc(p.label)}"></label>
+       <label>Tahun<input data-p="${i}.year" value="${esc(p.year)}"></label>
+       <label class="full">Deskripsi singkat<textarea data-p="${i}.desc">${esc(p.desc)}</textarea></label>
+       <label class="full">Tantangan<textarea data-p="${i}.challenge">${esc(p.challenge)}</textarea></label>
+       <label class="full">Pendekatan<textarea data-p="${i}.solution">${esc(p.solution)}</textarea></label>
+       <label class="full">Hasil<textarea data-p="${i}.result">${esc(p.result)}</textarea></label>
+       <label class="full">Tools<input data-p="${i}.tools" value="${esc(p.tools)}"></label></div>
+       <div class="tools"><img class="prev" src="${esc(imgSrc(p.image))}" alt=""><label class="btn sm" style="cursor:pointer">Ganti poster<input type="file" accept="image/*" data-up="proj:${i}" hidden></label></div>
+       <div class="tools"><button class="btn sm" data-act="pmove" data-i="${i}" data-d="-1">↑ Naik</button><button class="btn sm" data-act="pmove" data-i="${i}" data-d="1">↓ Turun</button><button class="btn sm del" data-act="pdel" data-i="${i}">Hapus karya</button></div></div></details>`).join("");
+  },
+  svc() {
+    cfg.services = cfg.services || [];
+    return `<p class="hint">Bagian "Layanan & Harga" baru muncul di website setelah Anda menambahkan minimal satu layanan aktif. Tombol pesan akan membuka WhatsApp dengan pesan otomatis.</p>
+    <div class="tools"><button class="btn pri sm" data-act="sadd">+ Tambah layanan</button></div>` + cfg.services.map((s, i) => `
+      <details class="item"><summary><div class="t"><b>${esc(s.title || "(layanan baru)")}</b><span class="muted">${esc(s.price || "")}</span></div><span class="pill ${s.active === false ? "" : "baru"}">${s.active === false ? "nonaktif" : "aktif"}</span></summary>
+      <div class="body"><div class="fields">
+       <label>Nama layanan<input data-s="${i}.title" value="${esc(s.title)}"></label>
+       <label>Harga (teks bebas, mis. Mulai Rp 50.000)<input data-s="${i}.price" value="${esc(s.price)}"></label>
+       <label>Lencana (opsional, mis. Terlaris)<input data-s="${i}.badge" value="${esc(s.badge)}"></label>
+       <label>Tampilkan di website<input type="checkbox" data-s="${i}.active" ${s.active === false ? "" : "checked"}></label>
+       <label class="full">Deskripsi<textarea data-s="${i}.desc">${esc(s.desc)}</textarea></label>
+       <label class="full">Yang didapat (satu baris = satu poin)<textarea data-s="${i}.features">${esc((s.features || []).join("\n"))}</textarea></label></div>
+       <div class="tools"><button class="btn sm" data-act="smove" data-i="${i}" data-d="-1">↑ Naik</button><button class="btn sm" data-act="smove" data-i="${i}" data-d="1">↓ Turun</button><button class="btn sm del" data-act="sdel" data-i="${i}">Hapus</button></div></div></details>`).join("");
+  },
+  set() {
+    const c = cfg.contact || {}, m = cfg.meta || {}, ig = cfg.integrations || {};
+    return `<div class="card group"><p class="eyebrow">Kontak</p><div class="fields">
+      <label>Email tujuan pesan<input data-c="contact.email" value="${esc(c.email || "")}" placeholder="robyandryansah@gmail.com"></label>
+      <label>Nomor WhatsApp (62…, tanpa +)<input data-c="contact.whatsapp" value="${esc(c.whatsapp || "")}" placeholder="628882830953"></label>
+      <label>Link Instagram<input data-c="contact.instagram" value="${esc(c.instagram || "")}" placeholder="https://instagram.com/…"></label>
+      <label>Link LinkedIn<input data-c="contact.linkedin" value="${esc(c.linkedin || "")}" placeholder="https://linkedin.com/in/…"></label>
+      <label class="full">File CV (PDF) — tombol "Unduh CV" otomatis memakai file ini<input data-c="contact.cvUrl" value="${esc(c.cvUrl || "")}" placeholder="(kosong = CV teks otomatis)"></label></div>
+      <div class="tools"><label class="btn sm" style="cursor:pointer">Unggah CV (PDF)<input type="file" accept="application/pdf" data-up="cv" hidden></label></div></div>
+    <div class="card group"><p class="eyebrow">Judul & deskripsi website (muncul di Google / saat dibagikan)</p><div class="fields">
+      <label class="full">Judul tab<input data-c="meta.title" value="${esc(m.title || "")}" placeholder="${esc(D.title)}"></label>
+      <label class="full">Deskripsi<textarea data-c="meta.description" placeholder="${esc(D.desc)}">${esc(m.description || "")}</textarea></label></div></div>
+    <div class="card group"><p class="eyebrow">Notifikasi email gratis (opsional)</p>
+      <label>Access key web3forms.com<input data-c="integrations.web3forms" value="${esc(ig.web3forms || "")}" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></label>
+      <p class="hint">Daftar gratis di web3forms.com dengan email Anda, salin Access Key ke sini: setiap pesan baru juga dikirim ke email Anda.</p></div>
+    <div class="card group"><p class="eyebrow">Ganti kata sandi admin</p>
+      <label>Kata sandi baru (min. 8 karakter)<input id="newPass" type="password" autocomplete="new-password"></label>
+      <div class="tools"><button class="btn sm" data-act="pass">Simpan kata sandi</button></div></div>`;
+  }
+};
+
+function ensureProjects() { if (!cfg.projects) cfg.projects = JSON.parse(JSON.stringify(D.projects)); }
+function renderTabs() { $("#tabs").innerHTML = TABS.map(([k, n]) => `<button class="tab ${k === tab ? "on" : ""}" data-tab="${k}">${n}${k === "msg" && newMsgs ? `<i>${newMsgs}</i>` : ""}</button>`).join(""); }
+async function show(k) {
+  tab = k || tab; renderTabs(); const v = $("#view"); v.innerHTML = `<p class="muted">Memuat…</p>`;
+  try { v.innerHTML = await views[tab](); } catch (e) { v.innerHTML = `<div class="card"><p class="err">Gagal memuat: ${esc(e.message)}</p><p class="hint">Pastikan setup.sql sudah dijalankan di Supabase.</p></div>`; }
+}
+
+/* ---------- interaksi ---------- */
+document.addEventListener("input", e => {
+  const el = e.target, d = el.dataset; if (!$("#view").contains(el)) return;
+  if (d.t !== undefined || d.tl !== undefined) {
+    const list = d.tl !== undefined, key = list ? d.tl : d.t, bag = list ? "lists" : "text"; cfg[bag] = cfg[bag] || {};
+    if (el.value.trim() === "" || el.value === d.def) delete cfg[bag][key]; else cfg[bag][key] = el.value; markDirty();
+  } else if (d.c !== undefined) {
+    let v = el.value; if (d.c.startsWith("fonts.") && d.c !== "fonts.weight") v = v.replace(/[^A-Za-z0-9 ]/g, "");
+    if (d.c === "contact.whatsapp") v = v.replace(/\D/g, "");
+    setPath(cfg, d.c, v); markDirty();
+  } else if (d.p !== undefined || d.s !== undefined) {
+    const [i, f] = (d.p ?? d.s).split("."), arr = d.p !== undefined ? (ensureProjects(), projTouched = true, cfg.projects) : cfg.services;
+    arr[i][f] = f === "features" ? el.value.split("\n").map(x => x.trim()).filter(Boolean) : el.type === "checkbox" ? el.checked : el.value; markDirty();
+  }
+});
+document.addEventListener("change", async e => {
+  const el = e.target, d = el.dataset;
+  if (el.type === "checkbox" && d.s !== undefined) { const [i, f] = d.s.split("."); cfg.services[i][f] = el.checked; markDirty(); return; }
+  if (d.up && el.files[0]) {
+    try {
+      toast("Mengunggah…"); const f = el.files[0]; const [kind, id] = d.up.split(":");
+      if (kind === "img") setPath(cfg, "images." + id, await upload(f, "images"));
+      else if (kind === "proj") { ensureProjects(); projTouched = true; cfg.projects[id].image = await upload(f, "karya"); }
+      else if (kind === "cv") setPath(cfg, "contact.cvUrl", await upload(f, "cv"));
+      markDirty(); toast("Terunggah. Klik “Simpan perubahan”."); show();
+    } catch (err) { toast("Gagal unggah: " + err.message, true); }
+  }
+});
+document.addEventListener("click", async e => {
+  const t = e.target.closest("[data-tab],[data-act]"); if (!t) return;
+  if (t.dataset.tab) return show(t.dataset.tab);
+  const a = t.dataset.act, i = Number(t.dataset.i);
+  try {
+    if (a === "mstat") { await api("/rest/v1/messages?id=eq." + t.dataset.id, {method: "PATCH", json: {status: t.dataset.v}}); show(); }
+    else if (a === "mdel") { if (confirm("Hapus pesan ini?")) { await api("/rest/v1/messages?id=eq." + t.dataset.id, {method: "DELETE"}); show(); } }
+    else if (a === "padd") { ensureProjects(); projTouched = true; cfg.projects.unshift({id: Math.max(0, ...cfg.projects.map(p => p.id)) + 1, category: "event", year: String(new Date().getFullYear()), image: "", label: "Event · Poster", title: "Karya baru", desc: "", challenge: "", solution: "", result: "", tools: ""}); markDirty(); show(); }
+    else if (a === "pdel") { if (confirm("Hapus karya ini dari website?")) { ensureProjects(); projTouched = true; cfg.projects.splice(i, 1); markDirty(); show(); } }
+    else if (a === "pmove" || a === "smove") { const arr = a === "pmove" ? (ensureProjects(), projTouched = true, cfg.projects) : cfg.services, j = i + Number(t.dataset.d); if (j >= 0 && j < arr.length) { [arr[i], arr[j]] = [arr[j], arr[i]]; markDirty(); show(); } }
+    else if (a === "sadd") { cfg.services = cfg.services || []; cfg.services.push({title: "Layanan baru", price: "", badge: "", desc: "", features: [], active: true}); markDirty(); show(); }
+    else if (a === "sdel") { if (confirm("Hapus layanan ini?")) { cfg.services.splice(i, 1); markDirty(); show(); } }
+    else if (a === "imgreset") { delete cfg.images[t.dataset.k]; markDirty(); show(); }
+    else if (a === "resettheme") { if (confirm("Kembalikan semua warna & font ke bawaan?")) { delete cfg.theme; delete cfg.fonts; markDirty(); show(); } }
+    else if (a === "pass") { const p = $("#newPass").value; if (p.length < 8) return toast("Minimal 8 karakter", true); await api("/auth/v1/user", {method: "PUT", json: {password: p}}); $("#newPass").value = ""; toast("Kata sandi diganti."); }
+  } catch (err) { toast(err.message, true); }
+});
+$("#saveBtn").onclick = async () => {
+  try {
+    if (!projTouched && !hadProjects) delete cfg.projects;
+    await api("/rest/v1/site_settings?on_conflict=id", {method: "POST", json: {id: 1, data: cfg, updated_at: new Date().toISOString()}, headers: {Prefer: "resolution=merge-duplicates,return=minimal"}});
+    dirty = false; hadProjects = hadProjects || !!cfg.projects; $("#saveBtn").disabled = true; toast("Tersimpan. Website langsung memakai perubahan ini.");
+  } catch (err) { toast("Gagal menyimpan: " + err.message, true); }
+};
+$("#outBtn").onclick = () => { if (!dirty || confirm("Ada perubahan belum disimpan. Tetap keluar?")) logout(); };
+addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+/* ---------- autentikasi, pemulihan password & mulai ---------- */
+const ADMIN_REDIRECT = new URL("admin.html", location.href).href;
+function showGate(which) {
+  $("#login").hidden = which !== "login";
+  $("#forgot").hidden = which !== "forgot";
+  $("#reset").hidden = which !== "reset";
+  $("#gate").hidden = false;
+  $("#app").hidden = true;
+}
+function authError(j, fallback) {
+  return j.msg || j.message || j.error_description || j.error || fallback;
+}
+async function readResponse(r, fallback) {
+  const raw = await r.text();
+  let j = {};
+  try { j = raw ? JSON.parse(raw) : {}; } catch (e) { j = {message: raw}; }
+  if (!r.ok) throw new Error(authError(j, fallback));
+  return j;
+}
+async function start() {
+  await loadDefaults();
+  const rows = await api("/rest/v1/site_settings?id=eq.1&select=data"); cfg = (rows[0] && rows[0].data) || {}; hadProjects = !!cfg.projects;
+  try { newMsgs = (await api("/rest/v1/messages?select=id&status=eq.baru&limit=500")).length; } catch (e) {}
+  $("#gate").hidden = true; $("#app").hidden = false; show("home");
+}
+$("#login").addEventListener("submit", async e => {
+  e.preventDefault(); $("#lErr").textContent = "";
+  const btn = $("#login button[type=submit]"); btn.disabled = true;
+  try {
+    const r = await fetch(B.url + "/auth/v1/token?grant_type=password", {method: "POST", headers: {apikey: B.key, "Content-Type": "application/json"}, body: JSON.stringify({email: $("#lEmail").value.trim(), password: $("#lPass").value})});
+    const j = await readResponse(r, "Email atau kata sandi salah.");
+    setSession(j); await start();
+  } catch (err) { $("#lErr").textContent = err.message || "Login gagal. Periksa koneksi dan konfigurasi Supabase."; }
+  finally { btn.disabled = false; }
+});
+$("#forgotBtn").onclick = () => {
+  $("#fEmail").value = $("#lEmail").value.trim(); $("#fErr").textContent = ""; $("#fInfo").textContent = ""; showGate("forgot");
+};
+$("#backLogin").onclick = () => showGate("login");
+$("#forgot").addEventListener("submit", async e => {
+  e.preventDefault(); $("#fErr").textContent = ""; $("#fInfo").textContent = "";
+  const btn = $("#fSubmit"); btn.disabled = true;
+  try {
+    const r = await fetch(B.url + "/auth/v1/recover?redirect_to=" + encodeURIComponent(ADMIN_REDIRECT), {method: "POST", headers: {apikey: B.key, "Content-Type": "application/json"}, body: JSON.stringify({email: $("#fEmail").value.trim()})});
+    await readResponse(r, "Tidak dapat mengirim email pemulihan.");
+    $("#fInfo").textContent = "Jika email terdaftar, tautan pemulihan akan dikirim. Periksa Inbox dan Spam.";
+  } catch (err) {
+    const msg = err.message || "Pengiriman email gagal.";
+    $("#fErr").textContent = msg.toLowerCase().includes("rate limit") ? "Batas pengiriman email Supabase tercapai. Tunggu sebelum meminta email baru." : msg;
+  } finally { btn.disabled = false; }
+});
+$("#reset").addEventListener("submit", async e => {
+  e.preventDefault(); $("#rErr").textContent = "";
+  const pass = $("#rPass").value, pass2 = $("#rPass2").value;
+  if (pass.length < 8) { $("#rErr").textContent = "Gunakan minimal 8 karakter."; return; }
+  if (pass !== pass2) { $("#rErr").textContent = "Kedua kata sandi tidak sama."; return; }
+  if (!S || !S.access_token) { $("#rErr").textContent = "Sesi pemulihan tidak ditemukan. Minta tautan reset yang baru."; return; }
+  const btn = $("#rSubmit"); btn.disabled = true;
+  try {
+    const r = await fetch(B.url + "/auth/v1/user", {method: "PUT", headers: {apikey: B.key, Authorization: "Bearer " + S.access_token, "Content-Type": "application/json"}, body: JSON.stringify({password: pass})});
+    await readResponse(r, "Gagal memperbarui kata sandi.");
+    S = null; localStorage.removeItem("infinity-admin");
+    $("#rPass").value = ""; $("#rPass2").value = "";
+    $("#lErr").textContent = "Kata sandi berhasil diperbarui. Silakan login menggunakan kata sandi baru.";
+    showGate("login");
+  } catch (err) { $("#rErr").textContent = err.message || "Gagal memperbarui kata sandi."; }
+  finally { btn.disabled = false; }
+});
+function handleRecoveryCallback() {
+  const hash = new URLSearchParams(location.hash.replace(/^#/, ""));
+  const type = hash.get("type");
+  const access = hash.get("access_token");
+  const refreshToken = hash.get("refresh_token");
+  const callbackError = hash.get("error_description") || hash.get("error");
+  if (callbackError) {
+    $("#lErr").textContent = decodeURIComponent(callbackError.replace(/\+/g, " "));
+    history.replaceState(null, "", location.pathname + location.search);
+    showGate("login"); return true;
+  }
+  if (type === "recovery" && access && refreshToken) {
+    setSession({access_token: access, refresh_token: refreshToken});
+    history.replaceState(null, "", location.pathname + location.search);
+    showGate("reset"); return true;
+  }
+  return false;
+}
+(async () => {
+  if (!B.url || !B.key) { $("#login").innerHTML = `<p class="eyebrow">Belum dikonfigurasi</p><h1>Hubungkan database dulu</h1><p class="muted">Isi <b>url</b> dan <b>key</b> di file <b>config.js</b>, lalu muat ulang halaman ini.</p>`; return; }
+  if (handleRecoveryCallback()) return;
+  if (S) {
+    try {
+      if (await refresh()) await start();
+      else { S = null; localStorage.removeItem("infinity-admin"); showGate("login"); }
+    } catch (e) {
+      S = null; localStorage.removeItem("infinity-admin"); showGate("login");
+      $("#lErr").textContent = "Sesi login berakhir. Silakan masuk kembali.";
+    }
+  }
+})();
+</script>
+</body>
+</html>
